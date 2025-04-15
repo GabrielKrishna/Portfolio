@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gabriel Krishna | Portfólio Pessoal
 
-## Getting Started
+Um portfólio pessoal moderno e minimalista desenvolvido com Next.js, apresentando uma interface fluida com animações suaves e design responsivo.
 
-First, run the development server:
+## 🌟 Funcionalidades
+
+- **Design Moderno**: Interface minimalista com gradientes sutis e efeito de vidro (glassmorphism)
+- **Animações Fluidas**: Transições e efeitos visuais usando Framer Motion
+- **Cursor Personalizado**: Cursor interativo que muda ao passar por elementos clicáveis (visível apenas em desktop)
+- **Navegação Suave**: Scrolling suave entre seções com destaque na navegação
+- **Responsividade**: Experiência adaptada para todos os tamanhos de tela
+- **Projetos Interativos**: Modal com detalhes completos ao clicar em projetos
+- **Menu Mobile**: Menu responsivo para dispositivos móveis
+
+## 🚀 Tecnologias
+
+- **Next.js** - Framework React com SSR e otimizações de performance
+- **TypeScript** - Tipagem estática para código mais seguro
+- **Tailwind CSS** - Estilização utilitária e responsiva
+- **Framer Motion** - Biblioteca de animações para React
+- **React Icons** - Ícones para a interface
+
+## 📷 Screenshots
+
+### Visualização Desktop
+
+### Visualização Mobile
+
+## 🛠️ Instalação
+
+Clone este repositório e instale as dependências:
+
+```bash
+# Clone o repositório
+git clone https://github.com/GabrielKrishna/portfolio.git
+
+# Entre na pasta do projeto
+cd portfolio
+
+# Instale as dependências
+npm install
+# ou
+yarn install
+# ou
+pnpm install
+```
+
+## 🚀 Iniciando o projeto
+
+Execute o servidor de desenvolvimento:
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
+# ou
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📝 Personalizando
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Dados
 
-## Learn More
+O projeto utiliza objetos estáticos para os dados. Para personalizar seu portfólio, edite os seguintes objetos no componente Home:
 
-To learn more about Next.js, take a look at the following resources:
+- `experiences`: Adicione ou modifique suas experiências profissionais
+- `projects`: Atualize com seus projetos pessoais
+- `skills`: Edite suas habilidades e competências
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧩 Recursos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Modal de Projetos
 
-## Deploy on Vercel
+Ao clicar em um projeto, um modal é exibido com informações detalhadas utilizando Framer Motion para animações suaves.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📱 Responsividade
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O layout se adapta para diferentes tamanhos de tela:
+
+- Design fluido com Tailwind CSS
+- Menu móvel para navegação em telas pequenas
+- Ajustes de tamanho de fonte e espaçamento
+- Configuração para prefers-reduced-motion
+
+## 📞 Contato
+
+- **Email**: gabrielassisvieira03@gmail.com
+- **GitHub**: [GabrielKrishna](https://github.com/GabrielKrishna)
+- **LinkedIn**: [Gabriel Krishna](https://linkedin.com/in/GabrielKrishna)
