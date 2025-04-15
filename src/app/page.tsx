@@ -41,11 +41,6 @@ type Experience = {
   description: string;
 };
 
-type Skill = {
-  name: string;
-  category: "frontend" | "backend" | "design" | "tools";
-};
-
 export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeSection, setActiveSection] = useState("home");
@@ -66,64 +61,25 @@ export default function Home() {
   // Dados
   const experiences: Experience[] = [
     {
-      title: "Desenvolvedor Full-Stack",
-      company: "Loja de Informática",
-      period: "2024 - presente",
+      title: "Data Engineer",
+      company: "GoVendas",
+      period: "2025 - presente",
       description:
-        "Desenvolvimento de interfaces modernas para e-commerce com foco em performance e experiência do usuário. Implementação de arquitetura baseada em componentes e integração com APIs.",
-    },
-    {
-      title: "Desenvolvedor Full-Stack",
-      company: "Agência Digital",
-      period: "2022 - 2024",
-      description: "Criação de websites e aplicações web para diversos clientes, com foco em acessibilidade e responsividade.",
+        "Criação de dashboards a partir de bancos de dados para melhor visualização de consultas.",
     },
   ];
 
   const projects: Project[] = [
     {
       id: "ecommerce",
-      title: "E-commerce Informática",
+      title: "E-commerce InforMais",
       description:
-        "Loja virtual minimalista com experiência de usuário fluida e foco em performance. Implementação de carrinho persistente e checkout otimizado.",
-      techs: ["Next.js", "Zustand", "Tailwind CSS", "Stripe"],
+        "Loja virtual com foco em performance. Implementação de carrinho persistente e checkout otimizado.",
+      techs: ["Next.js", "Zustand", "Tailwind CSS"],
       github: "https://github.com/seuusuario/ecommerce",
       link: "https://ecommerce.vercel.app",
       featured: true,
     },
-    {
-      id: "dashboard",
-      title: "Dashboard Analytics",
-      description: "Painel administrativo para visualização de dados de vendas e comportamento do usuário com gráficos interativos.",
-      techs: ["React", "TypeScript", "Chart.js", "Firebase"],
-      github: "https://github.com/seuusuario/dashboard",
-      link: "https://dashboard-demo.vercel.app",
-    },
-    {
-      id: "portfolio",
-      title: "Portfólio v2",
-      description: "Versão anterior do meu portfólio com design minimalista e animações sutis.",
-      techs: ["Next.js", "Framer Motion", "GSAP"],
-      github: "https://github.com/seuusuario/portfolio-v2",
-      link: "https://portfolio-v2.vercel.app",
-    },
-    {
-      id: "cms",
-      title: "CMS Headless",
-      description: "Sistema de gerenciamento de conteúdo com painel admin e API para consumo de dados.",
-      techs: ["Node.js", "Express", "MongoDB", "React"],
-      github: "https://github.com/seuusuario/headless-cms",
-      link: "https://headless-cms-demo.vercel.app",
-    },
-  ];
-
-  const skills: Skill[] = [
-    { name: "React/Next.js", category: "frontend" },
-    { name: "TypeScript", category: "frontend" },
-    { name: "CSS/Sass/Tailwind", category: "frontend" },
-    { name: "UI/UX Design", category: "design" },
-    { name: "Node.js", category: "backend" },
-    { name: "Git/GitHub", category: "tools" },
   ];
 
   // Controlar posição do mouse para o cursor personalizado
@@ -134,7 +90,7 @@ export default function Home() {
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  }, [sections]);
 
   // Controlar seção ativa no scroll
   useEffect(() => {
@@ -155,7 +111,7 @@ export default function Home() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [sections]);
 
   // Variantes de animação para o cursor personalizado
   const cursorVariants = {
@@ -193,6 +149,7 @@ export default function Home() {
       {/* Cursor personalizado - visível apenas em desktop */}
       <motion.div
         className="fixed top-0 left-0 rounded-full pointer-events-none z-50 border border-white/20 backdrop-blur-sm hidden md:block"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         variants={cursorVariants as any}
         animate={cursorVariant}
         transition={{ type: "spring", stiffness: 500, damping: 28 }}
@@ -365,11 +322,12 @@ export default function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {[
-                { icon: <SiTypescript size={28} className="text-blue-500" />, name: "TypeScript", desc: "JavaScript but better" },
-                { icon: <SiReact size={28} className="text-cyan-400" />, name: "React", desc: "JavaScript Library" },
-                { icon: <SiNextdotjs size={28} className="text-white" />, name: "NextJS", desc: "React Framework" },
-                { icon: <SiTailwindcss size={28} className="text-sky-400" />, name: "Tailwind", desc: "CSS Framework" },
-                { icon: <FaGitAlt size={28} className="text-orange-500" />, name: "Git", desc: "Version Control" },
+                { icon: <SiTypescript size={28} style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript but better" },
+                { icon: <SiReact size={28} style={{ color: "#61dafb" }} />, name: "React", desc: "JavaScript Library" },
+                { icon: <SiNextdotjs size={28} />, name: "NextJS", desc: "React Framework" },
+                { icon: <SiTailwindcss size={28} style={{ color: "#06b6d4" }} />, name: "Tailwind", desc: "CSS Framework" },
+                { icon: <FaGitAlt size={28} style={{ color: "#f4511e" }} />, name: "Git", desc: "Version Control" },
+                { icon: <SiSupabase size={28} style={{ color: "#3ecf8e" }} />, name: "Supabase", desc: "Backend-as-a-service" },
               ].map((tech, index) => (
                 <div
                   key={index}
