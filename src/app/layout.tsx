@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 
 // Configuração de Metadados
 export const metadata: Metadata = {
-  title: "Gabriel Krishna | Desenvolvedor Full-Stack",
-  description: "Portfólio de desenvolvedor front-end especializado em interfaces modernas, minimalistas e funcionais.",
-  keywords: "desenvolvedor, front-end, portfolio, react, next.js, ui, ux, design",
+  title: "Gabriel Krishna | Full-Stack Developer and Data Engineer",
+  description: "Full-Stack Developer and Data Engineer porfolio website",
+  keywords: "developer, front-end, back-end, full-stack, data engineer, portfolio, react, next.js",
   authors: [{ name: "Gabriel Krishna" }],
   robots: "index, follow",
   icons: {
@@ -29,22 +29,22 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://seudominio.com",
-    title: "Seu Nome | Desenvolvedor Front-end",
-    description: "Portfólio de desenvolvedor front-end especializado em interfaces modernas, minimalistas e funcionais.",
+    url: "https://gabrielkrishna.vercel.app/",
+    title: "Gabriel Krishna | Full-Stack Developer and Data Engineer",
+    description: "Full-Stack Developer and Data Engineer porfolio website",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Gabriel Krishna - Portfólio"
+        alt: "Gabriel Krishna - Portfolio"
       }
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Seu Nome | Desenvolvedor Front-end",
-    description: "Portfólio de desenvolvedor front-end especializado em interfaces modernas, minimalistas e funcionais.",
+    title: "Gabriel Krishna | Full-Stack Developer and Data Engineer",
+    description: "Full-Stack Developer and Data Engineer porfolio website",
     images: ["/og-image.jpg"],
   }
 };

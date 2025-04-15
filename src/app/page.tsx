@@ -298,7 +298,7 @@ export default function Home() {
                 <div className="aspect-square rounded-xl overflow-hidden relative border border-white/10 z-10">
                   {/* Fundo + Imagem */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-blue-500/20 flex items-center justify-center text-2xl font-bold">
-                    <Image src="/eu.jpeg" alt="My picture" fill className="object-cover" />
+                    <Image src="/profile/profilepic.jpeg" alt="My picture" fill className="object-cover" />
                   </div>
                 </div>
 
