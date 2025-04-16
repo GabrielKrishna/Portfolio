@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaGitAlt } from "react-icons/fa";
-import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSupabase } from "react-icons/si";
+import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaJava, FaGitAlt } from "react-icons/fa";
+import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiSupabase } from "react-icons/si";
 import { HiOutlineArrowNarrowRight, HiX, HiMenu } from "react-icons/hi";
 import Link from "next/link";
 import Image from "next/image";
@@ -329,14 +329,17 @@ export default function Home() {
               Tenho domínio em diversas tecnologias modernas que me permitem desenvolver soluções eficientes e de alta performance.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {[
-                { icon: <SiTypescript size={28} style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript superset" },
+                { icon: <SiTypescript size={28} style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript Superset" },
                 { icon: <SiReact size={28} style={{ color: "#61dafb" }} />, name: "React", desc: "JavaScript Library" },
                 { icon: <SiNextdotjs size={28} />, name: "Next.Js", desc: "React Framework" },
                 { icon: <SiTailwindcss size={28} style={{ color: "#06b6d4" }} />, name: "Tailwind CSS", desc: "CSS Framework" },
+                { icon: <FaJava size={28} style={{ color: "#f44336" }} />, name: "Java", desc: "Back-End Language" },
+                { icon: <SiSpring size={28} style={{ color: "#6db33f" }} />, name: "Spring", desc: "Java Framework" },
                 { icon: <FaGitAlt size={28} style={{ color: "#f4511e" }} />, name: "Git", desc: "Version Control" },
                 { icon: <SiSupabase size={28} style={{ color: "#3ecf8e" }} />, name: "Supabase", desc: "Backend-as-a-service" },
+                
               ].map((tech, index) => (
                 <div
                   key={index}
