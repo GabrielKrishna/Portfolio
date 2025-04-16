@@ -136,6 +136,8 @@ export default function Home() {
     },
   };
 
+  const [scrollTarget, setScrollTarget] = useState<string | null>(null);
+
   return (
     <main className="font-sans relative min-h-screen antialiased text-white">
       {/* Custom cursor */}
@@ -197,21 +199,35 @@ export default function Home() {
         </div>
 
         {/* Mobile Navigation */}
-        <AnimatePresence>
+        <AnimatePresence
+          onExitComplete={() => {
+            if (scrollTarget) {
+              const targetEl = document.getElementById(scrollTarget);
+              if (targetEl) {
+                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+              setScrollTarget(null);
+            }
+          }}
+        >
           {mobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden glass-effect border-t border-white/5"
+              className="md:hidden border-t border-white/5 bg-black/0 backdrop-blur-md"
             >
               <nav className="flex flex-col py-4">
                 {Object.keys(sections).map((section) => (
                   <a
                     key={section}
-                    href={`#${section}`}
+                    href="#"
                     className={`px-6 py-3 text-base ${activeSection === section ? "text-white font-medium" : "text-gray-400"} hover:bg-white/5`}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      setScrollTarget(section);
+                    }}
                   >
                     {section.charAt(0).toUpperCase() + section.slice(1)}
                   </a>
@@ -223,7 +239,11 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section ref={sections.home} id="home" className="min-h-screen flex items-center pt-20 pb-16 px-4 sm:px-6 animate-slide-up">
+      <section
+        ref={sections.home}
+        id="home"
+        className="min-h-screen flex items-center pt-20 pb-28 sm:pb-20 px-6 sm:px-8 md:px-10 lg:px-12 animate-slide-up"
+      >
         <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           {/* Texto */}
           <div className="text-center md:text-left">
@@ -321,7 +341,7 @@ export default function Home() {
       </section>
 
       {/* Tecnologias Section */}
-      <section id="tecnologias" className="py-16 sm:py-20 px-4 sm:px-6">
+      <section id="tecnologias" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
             <h2 className="text-2xl sm:text-3xl font-bold mb-8 inline-block ml-2">Tecnologias atuais</h2>
@@ -331,21 +351,20 @@ export default function Home() {
 
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {[
-                { icon: <SiTypescript size={28} style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript Superset" },
-                { icon: <SiReact size={28} style={{ color: "#61dafb" }} />, name: "React", desc: "JavaScript Library" },
-                { icon: <SiNextdotjs size={28} />, name: "Next.Js", desc: "React Framework" },
-                { icon: <SiTailwindcss size={28} style={{ color: "#06b6d4" }} />, name: "Tailwind CSS", desc: "CSS Framework" },
-                { icon: <FaJava size={28} style={{ color: "#f44336" }} />, name: "Java", desc: "Back-End Language" },
-                { icon: <SiSpring size={28} style={{ color: "#6db33f" }} />, name: "Spring", desc: "Java Framework" },
-                { icon: <FaGitAlt size={28} style={{ color: "#f4511e" }} />, name: "Git", desc: "Version Control" },
-                { icon: <SiSupabase size={28} style={{ color: "#3ecf8e" }} />, name: "Supabase", desc: "Backend-as-a-service" },
-                
+                { icon: <SiTypescript className="w-7 h-7" style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript Superset" },
+                { icon: <SiReact className="w-7 h-7" style={{ color: "#61dafb" }} />, name: "React", desc: "JavaScript Library" },
+                { icon: <SiNextdotjs className="w-7 h-7" />, name: "Next.Js", desc: "React Framework" },
+                { icon: <SiTailwindcss className="w-7 h-7" style={{ color: "#06b6d4" }} />, name: "Tailwind CSS", desc: "CSS Framework" },
+                { icon: <FaJava className="w-7 h-7" style={{ color: "#f44336" }} />, name: "Java", desc: "Back-End Language" },
+                { icon: <SiSpring className="w-7 h-7" style={{ color: "#6db33f" }} />, name: "Spring", desc: "Java Framework" },
+                { icon: <FaGitAlt className="w-7 h-7" style={{ color: "#f4511e" }} />, name: "Git", desc: "Version Control" },
+                { icon: <SiSupabase className="w-7 h-7" style={{ color: "#3ecf8e" }} />, name: "Supabase", desc: "Backend-as-a-service" },
               ].map((tech, index) => (
                 <div
                   key={index}
                   className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-colors"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center rounded-md bg-white/10 text-white">{tech.icon}</div>
+                  <div className="w-10 h-10 flex items-center justify-center rounded-md bg-white/10 text-white flex-shrink-0">{tech.icon}</div>
                   <div>
                     <h3 className="text-white font-semibold text-sm">{tech.name}</h3>
                     <p className="text-gray-400 text-xs">{tech.desc}</p>
@@ -358,7 +377,7 @@ export default function Home() {
       </section>
 
       {/* Experiência Section */}
-      <section ref={sections.experiencia} id="experiencia" className="py-16 sm:py-20 px-4 sm:px-6">
+      <section ref={sections.experiencia} id="experiencia" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
             <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 inline-block ml-2">Experiência</h2>
@@ -386,7 +405,7 @@ export default function Home() {
       </section>
 
       {/* Projetos Section */}
-      <section ref={sections.projetos} id="projetos" className="py-16 sm:py-20 px-4 sm:px-6">
+      <section ref={sections.projetos} id="projetos" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
             <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 inline-block ml-2">Projetos</h2>
@@ -507,13 +526,7 @@ export default function Home() {
               </div>
 
               <div className="aspect-video w-full bg-black/50 rounded-lg mb-6 flex items-center justify-center overflow-hidden">
-                <Image
-                  src="/projects/InforMais.jpeg"
-                  alt="Screenshot do projeto"
-                  width={1280}
-                  height={720}
-                  className="object-cover w-full h-full"
-                />
+                <Image src="/projects/InforMais.jpeg" alt="Screenshot do projeto" width={1280} height={720} className="object-cover w-full h-full" />
               </div>
 
               <p className="mb-6 text-gray-300">{selectedProject.description}</p>
