@@ -381,7 +381,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-      
+
       {/* Projetos Section */}
       <section ref={sections.projetos} id="projetos" className="py-16 sm:py-20 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
@@ -503,9 +503,14 @@ export default function Home() {
                 </button>
               </div>
 
-              <div className="aspect-video w-full bg-black/50 rounded-lg mb-6 flex items-center justify-center">
-                {/* Placeholder para screenshot do projeto */}
-                <p className="text-gray-500">Screenshot do projeto</p>
+              <div className="aspect-video w-full bg-black/50 rounded-lg mb-6 flex items-center justify-center overflow-hidden">
+                <Image
+                  src="/projects/InforMais.jpeg"
+                  alt="Screenshot do projeto"
+                  width={1280}
+                  height={720}
+                  className="object-cover w-full h-full"
+                />
               </div>
 
               <p className="mb-6 text-gray-300">{selectedProject.description}</p>
