@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaJava, FaGitAlt } from "react-icons/fa";
-import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiSupabase } from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiPython, SiSupabase } from "react-icons/si";
 import { HiOutlineArrowNarrowRight, HiX, HiMenu } from "react-icons/hi";
 import Link from "next/link";
 import Image from "next/image";
@@ -372,6 +372,7 @@ export default function Home() {
                 { icon: <SiTailwindcss className="w-7 h-7" style={{ color: "#06b6d4" }} />, name: "Tailwind CSS", desc: "CSS Framework" },
                 { icon: <FaJava className="w-7 h-7" style={{ color: "#f44336" }} />, name: "Java", desc: "Back-End Language" },
                 { icon: <SiSpring className="w-7 h-7" style={{ color: "#6db33f" }} />, name: "Spring", desc: "Java Framework" },
+                { icon: <SiPython className="w-7 h-7" style={{ color: "#ffcf3f" }} />, name: "Python", desc: "Data Engineering Language" },
                 { icon: <FaGitAlt className="w-7 h-7" style={{ color: "#f4511e" }} />, name: "Git", desc: "Version Control" },
                 { icon: <SiSupabase className="w-7 h-7" style={{ color: "#3ecf8e" }} />, name: "Supabase", desc: "Backend-as-a-service" },
               ].map((tech, index) => (
