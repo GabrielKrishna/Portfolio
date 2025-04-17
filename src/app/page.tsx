@@ -47,7 +47,7 @@ export default function Home() {
       title: "Data Engineer",
       company: "GoVendas",
       period: "set 2024 - presente",
-      description: "Criação de dashboards a partir de bancos de dados para melhor visualização de consultas.",
+      description: "Criação de dashboards para visualização de dados, job para automatização de consultas e pré-processamento de dados.",
     },
     {
       title: "Desenvolvedor Web",
