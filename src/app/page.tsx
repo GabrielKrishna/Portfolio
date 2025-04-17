@@ -381,9 +381,8 @@ export default function Home() {
                   className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-colors"
                 >
                   <div className="w-10 h-10 flex items-center justify-center rounded-md bg-white/10 text-white flex-shrink-0">{tech.icon}</div>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">{tech.name}</h3>
-                    <p className="text-gray-400 text-xs">{tech.desc}</p>
+                  <div className="flex items-center">
+                    <h3 className="text-white font-semibold text-sm mb-0">{tech.name}</h3>
                   </div>
                 </div>
               ))}
