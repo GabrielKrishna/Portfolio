@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaJava, FaGitAlt } from "react-icons/fa";
-import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiPython, SiSupabase } from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiPython, SiPostgresql, SiSupabase } from "react-icons/si";
 import { HiOutlineArrowNarrowRight, HiX, HiMenu } from "react-icons/hi";
 import Link from "next/link";
 import Image from "next/image";
@@ -109,10 +109,10 @@ export default function Home() {
   }, [sections]);
 
   useEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
-  }, []);  
+  }, []);
 
   // Variantes de animação para o cursor personalizado
   const cursorVariants = {
@@ -368,13 +368,14 @@ export default function Home() {
               {[
                 { icon: <SiTypescript className="w-7 h-7" style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript Superset" },
                 { icon: <SiReact className="w-7 h-7" style={{ color: "#61dafb" }} />, name: "React", desc: "JavaScript Library" },
-                { icon: <SiNextdotjs className="w-7 h-7" />, name: "Next.Js", desc: "React Framework" },
-                { icon: <SiTailwindcss className="w-7 h-7" style={{ color: "#06b6d4" }} />, name: "Tailwind CSS", desc: "CSS Framework" },
-                { icon: <FaJava className="w-7 h-7" style={{ color: "#f44336" }} />, name: "Java", desc: "Back-End Language" },
-                { icon: <SiSpring className="w-7 h-7" style={{ color: "#6db33f" }} />, name: "Spring", desc: "Java Framework" },
-                { icon: <SiPython className="w-7 h-7" style={{ color: "#ffcf3f" }} />, name: "Python", desc: "Data Engineering Language" },
-                { icon: <FaGitAlt className="w-7 h-7" style={{ color: "#f4511e" }} />, name: "Git", desc: "Version Control" },
-                { icon: <SiSupabase className="w-7 h-7" style={{ color: "#3ecf8e" }} />, name: "Supabase", desc: "Backend-as-a-service" },
+                { icon: <SiNextdotjs className="w-7 h-7" />, name: "Next.Js" },
+                { icon: <SiTailwindcss className="w-7 h-7" style={{ color: "#06b6d4" }} />, name: "Tailwind CSS" },
+                { icon: <FaJava className="w-7 h-7" style={{ color: "#f44336" }} />, name: "Java" },
+                { icon: <SiSpring className="w-7 h-7" style={{ color: "#6db33f" }} />, name: "Spring" },
+                { icon: <SiPython className="w-7 h-7" style={{ color: "#ffcf3f" }} />, name: "Python" },
+                { icon: <SiPostgresql className="w-7 h-7" style={{ color: "#336791" }} />, name: "PostgreSQL" },
+                { icon: <FaGitAlt className="w-7 h-7" style={{ color: "#f4511e" }} />, name: "Git" },
+                { icon: <SiSupabase className="w-7 h-7" style={{ color: "#3ecf8e" }} />, name: "Supabase" },
               ].map((tech, index) => (
                 <div
                   key={index}
