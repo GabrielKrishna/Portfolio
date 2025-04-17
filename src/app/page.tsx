@@ -71,8 +71,8 @@ export default function Home() {
       title: "E-commerce InforMais",
       description: "Loja virtual com foco em performance. Implementação de carrinho persistente e checkout otimizado.",
       techs: ["Next.js", "Zustand", "Tailwind CSS"],
-      github: "https://github.com/seuusuario/ecommerce",
-      link: "https://ecommerce.vercel.app",
+      github: "https://github.com/gabrielkrishna",
+      link: "https://gabrielkrishna.vercel.app",
       featured: true,
     },
   ];
@@ -107,6 +107,12 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [sections]);
+
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);  
 
   // Variantes de animação para o cursor personalizado
   const cursorVariants = {
@@ -176,16 +182,24 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {Object.keys(sections).map((section) => (
               <a
                 key={section}
-                href={`#${section}`}
+                href="#"
                 className={`text-sm transition-all hover:text-white ${activeSection === section ? "text-white font-medium" : "text-gray-400"}`}
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+
+                  const targetEl = document.getElementById(section);
+                  if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+
+                  history.replaceState(null, "", window.location.pathname);
+                }}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
               </a>
@@ -227,6 +241,7 @@ export default function Home() {
                       e.preventDefault();
                       setMobileMenuOpen(false);
                       setScrollTarget(section);
+                      history.replaceState(null, "", window.location.pathname);
                     }}
                   >
                     {section.charAt(0).toUpperCase() + section.slice(1)}
@@ -278,7 +293,7 @@ export default function Home() {
             <div className="relative w-75 aspect-square z-10">
               {/* Imagem com gradiente */}
               <div className="absolute inset-0 rounded-xl overflow-hidden border border-white/20 z-20">
-                <Image src="/profile/profilepic.jpeg" alt="Minha foto" fill className="object-cover z-0" />
+                <Image src="/profile/profile.jpg" alt="Minha foto" fill className="object-cover z-0" />
               </div>
 
               {/* Borda deslocada */}
