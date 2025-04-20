@@ -177,7 +177,7 @@ export default function Home() {
               onMouseEnter={() => setCursorVariant("hover")}
               onMouseLeave={() => setCursorVariant("default")}
             >
-              Gabriel Krishna
+              GK
               <span className="text-purple-400">.</span>
             </span>
           </Link>
