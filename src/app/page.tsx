@@ -571,7 +571,7 @@ export default function Home() {
                   href={selectedProject.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-white text-black hover:bg-gray-200 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200 text-black hover:bg-white transition-colors"
                 >
                   <HiOutlineArrowNarrowRight /> <span>Visitar site</span>
                 </a>
