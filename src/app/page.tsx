@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaJava, FaGitAlt } from "react-icons/fa";
 import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiPython, SiPostgresql, SiSupabase } from "react-icons/si";
 import { HiOutlineArrowNarrowRight, HiX, HiMenu } from "react-icons/hi";
-import Link from "next/link";
 import Image from "next/image";
 
 type Project = {
