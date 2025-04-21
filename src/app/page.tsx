@@ -171,38 +171,41 @@ export default function Home() {
       {/* Header Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 glass-effect">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Link href="/">
-            <span
-              className="font-bold text-lg sm:text-xl tracking-tight cursor-pointer transition-colors hover:text-opacity-90"
-              onMouseEnter={() => setCursorVariant("hover")}
-              onMouseLeave={() => setCursorVariant("default")}
-            >
-              GK
-              <span className="text-purple-400">.</span>
-            </span>
-          </Link>
+          <button
+            className="font-bold text-lg sm:text-xl tracking-tight cursor-pointer transition-colors hover:text-opacity-90"
+            onMouseEnter={() => setCursorVariant("hover")}
+            onMouseLeave={() => setCursorVariant("default")}
+            onClick={() => {
+              const targetEl = document.getElementById("home");
+              if (targetEl) {
+                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+              history.replaceState(null, "", window.location.pathname);
+            }}
+          >
+            GK
+            <span className="text-purple-400">.</span>
+          </button>
 
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {Object.keys(sections).map((section) => (
-              <a
+              <button
                 key={section}
-                href="#"
-                className={`text-sm transition-all hover:text-white ${activeSection === section ? "text-white font-medium" : "text-gray-400"}`}
+                className={`text-sm transition-all hover:text-white ${
+                  activeSection === section ? "text-white font-medium" : "text-gray-400"
+                } cursor-pointer`}
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
-                onClick={(e) => {
-                  e.preventDefault();
-
+                onClick={() => {
                   const targetEl = document.getElementById(section);
                   if (targetEl) {
                     targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
                   }
-
                   history.replaceState(null, "", window.location.pathname);
                 }}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
-              </a>
+              </button>
             ))}
           </nav>
 
@@ -233,19 +236,19 @@ export default function Home() {
             >
               <nav className="flex flex-col py-4">
                 {Object.keys(sections).map((section) => (
-                  <a
+                  <button
                     key={section}
-                    href="#"
-                    className={`px-6 py-3 text-base ${activeSection === section ? "text-white font-medium" : "text-gray-400"} hover:bg-white/5`}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    className={`px-6 py-3 text-base ${
+                      activeSection === section ? "text-white font-medium" : "text-gray-400"
+                    } hover:bg-white/5 text-left cursor-pointer`}
+                    onClick={() => {
                       setMobileMenuOpen(false);
                       setScrollTarget(section);
                       history.replaceState(null, "", window.location.pathname);
                     }}
                   >
                     {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </a>
+                  </button>
                 ))}
               </nav>
             </motion.div>
@@ -275,15 +278,35 @@ export default function Home() {
             <p className="text-base text-gray-400 mb-8">📍 Brasil 🇧🇷</p>
 
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <a href="#projetos" className="px-6 py-3 rounded-full bg-gray-200 text-black font-medium hover:bg-white transition-colors duration-300">
+              <button
+                className="px-6 py-3 rounded-full bg-gray-200 text-black font-medium hover:bg-white transition-colors duration-300 cursor-pointer"
+                onMouseEnter={() => setCursorVariant("hover")}
+                onMouseLeave={() => setCursorVariant("default")}
+                onClick={() => {
+                  const targetEl = document.getElementById("projetos");
+                  if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                  history.replaceState(null, "", window.location.pathname);
+                }}
+              >
                 Ver projetos
-              </a>
-              <a
-                href="#contato"
-                className="px-6 py-3 rounded-full border border-white/30 hover:bg-white/10 transition-colors duration-300 text-white"
+              </button>
+
+              <button
+                className="px-6 py-3 rounded-full border border-white/30 hover:bg-white/10 transition-colors duration-300 text-white cursor-pointer"
+                onMouseEnter={() => setCursorVariant("hover")}
+                onMouseLeave={() => setCursorVariant("default")}
+                onClick={() => {
+                  const targetEl = document.getElementById("contato");
+                  if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                  history.replaceState(null, "", window.location.pathname);
+                }}
               >
                 Contato
-              </a>
+              </button>
             </div>
           </div>
 
