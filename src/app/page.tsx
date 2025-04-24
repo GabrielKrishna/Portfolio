@@ -430,9 +430,9 @@ export default function Home() {
                   viewport={{ once: true }}
                   className="relative pl-8 border-l border-white/30 py-8 sm:py-12"
                 >
-                  <div className="absolute w-3 h-3 bg-purple-500 rounded-full -left-[6.5px] top-14" />
+                  <div className="absolute w-3 h-3 bg-[var(--primary)] rounded-full -left-[6.5px] top-14" />
                   <h3 className="text-lg sm:text-xl font-medium">{exp.title}</h3>
-                  <p className="text-purple-300 mb-2">{exp.company}</p>
+                  <p className="text-[var(--primary)] mb-2">{exp.company}</p>
                   <p className="text-sm text-gray-400 mb-3">{exp.period}</p>
                   <p className="text-gray-300">{exp.description}</p>
                 </motion.div>
