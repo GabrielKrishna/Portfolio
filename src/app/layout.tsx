@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Fontes
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const geistSans = Geist({ 
   subsets: ["latin"], 
@@ -15,7 +14,6 @@ const geistMono = Geist_Mono({
   display: "swap" 
 });
 
-// Configuração de Metadados
 export const metadata: Metadata = {
   title: "Gabriel Krishna | Full-Stack Developer and Data Engineer",
   description: "Full-Stack Developer and Data Engineer porfolio website",
@@ -63,7 +61,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased selection:bg-purple-500/30 selection:text-white`}>
+      <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

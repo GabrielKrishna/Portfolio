@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaJava, FaGitAlt } from "react-icons/fa";
 import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiPython, SiPostgresql, SiSupabase } from "react-icons/si";
-import { HiOutlineArrowNarrowRight, HiX, HiMenu } from "react-icons/hi";
+import { HiMenu, HiExternalLink, HiX } from "react-icons/hi";
+import { MdHome, MdWork, MdFolder, MdBuild, MdEdit } from "react-icons/md";
 import Image from "next/image";
 
 type Project = {
@@ -26,21 +27,19 @@ type Experience = {
 };
 
 export default function Home() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeSection, setActiveSection] = useState("home");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [cursorVariant, setCursorVariant] = useState("default");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Refs para cada seção
   const sections = {
     home: useRef<HTMLDivElement>(null),
+    tecnologias: useRef<HTMLDivElement>(null),
     experiencia: useRef<HTMLDivElement>(null),
     projetos: useRef<HTMLDivElement>(null),
     contato: useRef<HTMLDivElement>(null),
   };
 
-  // Dados
   const experiences: Experience[] = [
     {
       title: "Data Engineer",
@@ -72,40 +71,55 @@ export default function Home() {
       techs: ["Next.js", "Zustand", "Tailwind CSS"],
       github: "https://github.com/gabrielkrishna",
       link: "https://gabrielkrishna.vercel.app",
+      image: "/projects/InforMais.jpeg",
       featured: true,
     },
   ];
 
-  // Controlar posição do mouse para o cursor personalizado
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [sections]);
+  }, []);
 
-  // Controlar seção ativa no scroll
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100;
+    // Tracks how much of each section is visible to find the "most visible" one
+    const visibilityMap = new Map<string, number>();
 
-      Object.entries(sections).forEach(([sectionName, ref]) => {
-        if (ref.current) {
-          const offsetTop = ref.current.offsetTop;
-          const height = ref.current.offsetHeight;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          visibilityMap.set(entry.target.id, entry.intersectionRatio);
+        });
 
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + height) {
-            setActiveSection(sectionName);
+        // Pick the section with the highest intersection ratio
+        let maxRatio = 0;
+        let mostVisible = "";
+        visibilityMap.forEach((ratio, id) => {
+          if (ratio > maxRatio) {
+            maxRatio = ratio;
+            mostVisible = id;
           }
-        }
-      });
-    };
+        });
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [sections]);
+        if (mostVisible) setActiveSection(mostVisible);
+      },
+      {
+        // Multiple thresholds for finer granularity
+        threshold: Array.from({ length: 21 }, (_, i) => i * 0.05),
+        rootMargin: "-60px 0px 0px 0px",
+      },
+    );
+
+    Object.entries(sections).forEach(([, ref]) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -113,7 +127,6 @@ export default function Home() {
     }
   }, []);
 
-  // Variantes de animação para o cursor personalizado
   const cursorVariants = {
     default: {
       x: mousePosition.x - 16,
@@ -126,12 +139,10 @@ export default function Home() {
       y: mousePosition.y - 30,
       height: 60,
       width: 60,
-      backgroundColor: "rgba(255, 255, 255, 0.2)",
-      mixBlendMode: "difference",
+      backgroundColor: "rgba(232, 105, 74, 0.1)",
     },
   };
 
-  // Efeito de entrada para elementos
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -143,11 +154,26 @@ export default function Home() {
 
   const [scrollTarget, setScrollTarget] = useState<string | null>(null);
 
+  // Mapeamento de seções para ícones
+  const navItems = [
+    { key: "home", icon: <MdHome className="w-5 h-5" />, label: "Início" },
+    { key: "tecnologias", icon: <MdBuild className="w-5 h-5" />, label: "Tecnologias" },
+    { key: "experiencia", icon: <MdWork className="w-5 h-5" />, label: "Experiência" },
+    { key: "projetos", icon: <MdFolder className="w-5 h-5" />, label: "Projetos" },
+    { key: "contato", icon: <MdEdit className="w-5 h-5" />, label: "Contato" },
+  ];
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    history.replaceState(null, "", window.location.pathname);
+  };
+
   return (
-    <main className="font-sans relative min-h-screen antialiased text-white">
+    <main className="font-sans relative min-h-screen antialiased text-[var(--foreground)]">
       {/* Custom cursor */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-50 border border-white/20 backdrop-blur-sm hidden md:block"
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[60] border border-[var(--primary)]/30 hidden md:block"
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         variants={cursorVariants as any}
         animate={cursorVariant}
@@ -155,258 +181,210 @@ export default function Home() {
       />
 
       {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black to-neutral-900 z-[-2]" />
-      <div className="fixed top-[15%] left-[15%] w-[500px] h-[500px] bg-[var(--primary)]/10 rounded-full blur-3xl z-[-1]" />
-      <div className="fixed top-[60%] right-[10%] w-[300px] h-[300px] bg-[var(--accent)]/10 rounded-full blur-3xl z-[-1]" />
+      <div className="fixed inset-0 bg-[var(--background)] z-[-1]" />
 
-      {/* Grain texture */}
-      <div
-        className="fixed inset-0 z-[-1] opacity-30 pointer-events-none mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-        }}
-      />
+      {/* ── HEADER: dock centralizado ── */}
+      <header className="fixed top-5 left-0 right-0 z-50 flex justify-center pointer-events-none">
+        {/* Desktop dock */}
+        <nav className="pointer-events-auto hidden md:flex items-center gap-1 px-4 py-2.5 rounded-2xl bg-[#2a2a2a] border border-white/[0.08]">
+          {navItems.map(({ key, icon, label }) => (
+            <button
+              key={key}
+              onClick={() => scrollTo(key)}
+              onMouseEnter={() => setCursorVariant("hover")}
+              onMouseLeave={() => setCursorVariant("default")}
+              className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 cursor-pointer
+                ${
+                  activeSection === key
+                    ? "text-[var(--primary)] bg-white/[0.07]"
+                    : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-white/[0.05]"
+                }`}
+            >
+              {icon}
 
-      {/* Header Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 glass-effect">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+              {/* Label tooltip */}
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-[#2a2a2a] border border-white/[0.08] text-[10px] text-[var(--foreground-muted)] whitespace-nowrap opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 pointer-events-none">
+                {label}
+              </span>
+
+              {activeSection === key && <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />}
+            </button>
+          ))}
+        </nav>
+
+        {/* Mobile: botão hamburguer à direita */}
+        <div className="pointer-events-auto md:hidden absolute right-4 top-0">
           <button
-            className="font-bold text-lg sm:text-xl tracking-tight cursor-pointer transition-colors hover:text-opacity-90"
-            onMouseEnter={() => setCursorVariant("hover")}
-            onMouseLeave={() => setCursorVariant("default")}
-            onClick={() => {
-              const targetEl = document.getElementById("home");
-              if (targetEl) {
-                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-              history.replaceState(null, "", window.location.pathname);
-            }}
+            className="p-2.5 rounded-xl bg-[#2a2a2a] border border-white/[0.08]"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            GK
-            <span className="text-purple-400">.</span>
-          </button>
-
-          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-            {Object.keys(sections).map((section) => (
-              <button
-                key={section}
-                className={`text-sm transition-all hover:text-white ${
-                  activeSection === section ? "text-white font-medium" : "text-gray-400"
-                } cursor-pointer`}
-                onMouseEnter={() => setCursorVariant("hover")}
-                onMouseLeave={() => setCursorVariant("default")}
-                onClick={() => {
-                  const targetEl = document.getElementById(section);
-                  if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }
-                  history.replaceState(null, "", window.location.pathname);
-                }}
-              >
-                {section.charAt(0).toUpperCase() + section.slice(1)}
-              </button>
-            ))}
-          </nav>
-
-          {/* Mobile menu button */}
-          <button className="md:hidden p-2 focus:outline-none" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
-            {mobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
+            {mobileMenuOpen ? <HiX className="w-5 h-5" /> : <HiMenu className="w-5 h-5" />}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
-        <AnimatePresence
-          onExitComplete={() => {
-            if (scrollTarget) {
-              const targetEl = document.getElementById(scrollTarget);
-              if (targetEl) {
-                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-              setScrollTarget(null);
-            }
-          }}
-        >
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-white/5 bg-black/0 backdrop-blur-md"
-            >
-              <nav className="flex flex-col py-4">
-                {Object.keys(sections).map((section) => (
-                  <button
-                    key={section}
-                    className={`px-6 py-3 text-base ${
-                      activeSection === section ? "text-white font-medium" : "text-gray-400"
-                    } hover:bg-white/5 text-left cursor-pointer`}
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setScrollTarget(section);
-                      history.replaceState(null, "", window.location.pathname);
-                    }}
-                  >
-                    {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </button>
-                ))}
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
-      {/* Hero Section */}
-      <section
-        ref={sections.home}
-        id="home"
-        className="min-h-screen flex items-center pt-20 pb-28 sm:pb-20 px-6 sm:px-8 md:px-10 lg:px-12 animate-slide-up"
+      {/* Mobile menu dropdown */}
+      <AnimatePresence
+        onExitComplete={() => {
+          if (scrollTarget) {
+            scrollTo(scrollTarget);
+            setScrollTarget(null);
+          }
+        }}
       >
-        <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-          {/* Texto */}
-          <div className="text-center md:text-left">
-            <span className="inline-block py-1 px-4 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm mb-4">
-              Desenvolvedor Full-Stack e Engenheiro de Dados
-            </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold gradient-text leading-tight mb-6">
-              Olá, eu sou <br /> Gabriel Krishna
-            </h1>
-            <p className="text-lg sm:text-xl text-[var(--foreground)] mb-4">
-              Desenvolvedor full-stack e engenheiro de dados com 2 anos de experiência. Focado em entregar soluções que funcionam de verdade.
-            </p>
-            <p className="text-base text-gray-400 mb-6">Trabalho principalmente com React, Next.js, TypeScript, Tailwind CSS, Python e Java.</p>
-            <p className="text-base text-gray-400 mb-8">📍 Brasil 🇧🇷</p>
-
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="fixed top-16 right-4 z-40 bg-[#2a2a2a] border border-white/[0.08] rounded-xl overflow-hidden"
+          >
+            {navItems.map(({ key, icon, label }) => (
               <button
-                className="px-6 py-3 rounded-full bg-gray-200 text-black font-medium hover:bg-white transition-colors duration-300 cursor-pointer"
+                key={key}
+                className={`flex items-center gap-3 w-full px-5 py-3 text-sm transition-colors
+                  ${activeSection === key ? "text-[var(--primary)]" : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"}`}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setScrollTarget(key);
+                }}
+              >
+                {icon} {label}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── HERO ── */}
+      <section ref={sections.home} id="home" className="min-h-screen flex items-center pt-24 pb-20 px-6 sm:px-8 md:px-10 lg:px-12">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="max-w-3xl mx-auto w-full flex flex-col md:flex-row md:items-center gap-10"
+        >
+          {/* Texto */}
+          <div className="flex-1">
+            <p className="text-[var(--foreground-muted)] text-sm mb-4 tracking-wide">Engenheiro de Dados & Desenvolvedor Full-Stack</p>
+
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-[var(--foreground)] leading-[1.1] mb-6">
+              Gabriel
+              <br />
+              <span className="text-[var(--primary)]">Krishna</span>
+            </h1>
+
+            <p className="text-[var(--foreground-muted)] text-base sm:text-lg max-w-xl mb-8 leading-relaxed">
+              2 anos de experiência transformando dados em soluções — pipelines, dashboards e automações com Python e SQL no dia a dia. Nos projetos paralelos, React, Next.js, TypeScript e Java.
+            </p>
+
+            <p className="text-[var(--foreground-muted)] text-base sm:text-lg max-w-xl mb-8 leading-relaxed">📍 Brasil</p>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                className="px-5 py-2.5 rounded-lg bg-[var(--foreground)] text-[var(--background)] text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
-                onClick={() => {
-                  const targetEl = document.getElementById("projetos");
-                  if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }
-                  history.replaceState(null, "", window.location.pathname);
-                }}
+                onClick={() => scrollTo("projetos")}
               >
                 Ver projetos
               </button>
-
               <button
-                className="px-6 py-3 rounded-full border border-white/30 hover:bg-white/10 transition-colors duration-300 text-white cursor-pointer"
+                className="px-5 py-2.5 rounded-lg border border-white/[0.12] text-sm text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:border-white/20 transition-all cursor-pointer"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
-                onClick={() => {
-                  const targetEl = document.getElementById("contato");
-                  if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }
-                  history.replaceState(null, "", window.location.pathname);
-                }}
+                onClick={() => scrollTo("contato")}
               >
                 Contato
               </button>
             </div>
           </div>
 
-          {/* Imagem e Ícones */}
-          <div className="flex flex-col items-center md:items-end gap-6">
-            {/* Imagem com bordas */}
-            <div className="relative w-75 aspect-square z-10">
-              {/* Imagem com gradiente */}
-              <div className="absolute inset-0 rounded-xl overflow-hidden border border-white/20 z-20">
-                <Image src="/profile/profile.jpg" alt="Minha foto" fill className="object-cover z-0" />
+          {/* Foto + links sociais */}
+          <div className="flex flex-col items-center gap-4 shrink-0 self-center md:self-auto p-4 rounded-2xl border border-[var(--primary)]/20">
+            {/* Foto */}
+            <div className="relative w-52 h-52 sm:w-60 sm:h-60">
+              <div className="absolute inset-0 rounded-xl overflow-hidden border border-white/[0.1]">
+                <Image src="/profile/profile.jpg" alt="Gabriel Krishna" fill className="object-cover" />
               </div>
-
-              {/* Borda deslocada */}
-              <div className="absolute top-0 left-0 w-full h-full rounded-xl border border-white/20 translate-x-4 translate-y-4 z-0" />
+              <div className="absolute inset-0 rounded-xl border border-white/[0.08] translate-x-3 translate-y-3 -z-10" />
             </div>
 
-            {/* Ícones */}
-            <div className="flex items-center gap-4">
+            {/* Links sociais — abaixo da foto */}
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#2a2a2a] border border-white/[0.08]">
               <a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-white/30 px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-white/10 transition-colors duration-300 text-gray-400 hover:text-white"
+                className="flex items-center gap-1.5 text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)] border border-white/[0.1] hover:border-white/20 rounded-md px-3 py-1.5 transition-all"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
               >
-                <FaFile /> Curriculo
+                <FaFile className="w-3 h-3" /> Currículo
               </a>
               <a
                 href="mailto:gabrielassisvieira03@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xl text-gray-400 hover:text-white transition-colors"
+                className="flex items-center justify-center w-8 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
                 aria-label="Email"
               >
-                <FaEnvelope />
+                <FaEnvelope className="w-4 h-4" />
               </a>
               <a
                 href="https://github.com/GabrielKrishna"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl text-gray-400 hover:text-white transition-colors"
+                className="flex items-center justify-center w-8 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
                 aria-label="GitHub"
               >
-                <FaGithub />
+                <FaGithub className="w-4 h-4" />
               </a>
               <a
                 href="https://linkedin.com/in/GabrielKrishna"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl text-gray-400 hover:text-white transition-colors"
+                className="flex items-center justify-center w-8 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
                 aria-label="LinkedIn"
               >
-                <FaLinkedin />
+                <FaLinkedin className="w-4 h-4" />
               </a>
             </div>
           </div>
         </motion.div>
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
       </section>
 
-      {/* Tecnologias Section */}
-      <section id="tecnologias" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
-        <div className="max-w-5xl mx-auto">
+      {/* ── TECNOLOGIAS ── */}
+      <section ref={sections.tecnologias} id="tecnologias" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
+        <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-8 inline-block ml-2">Tecnologias atuais</h2>
-            <p className="text-gray-400 mb-12">
-              Tenho domínio em diversas tecnologias modernas que me permitem desenvolver soluções eficientes e de alta performance.
-            </p>
+            <h2 className="text-2xl font-semibold mb-2 text-[var(--foreground)]">Tecnologias</h2>
+            <p className="text-base text-[var(--foreground-muted)] mb-8">Stack de desenvolvimento.</p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {[
-                { icon: <SiTypescript className="w-7 h-7" style={{ color: "#007acc" }} />, name: "TypeScript", desc: "JavaScript Superset" },
-                { icon: <SiReact className="w-7 h-7" style={{ color: "#61dafb" }} />, name: "React", desc: "JavaScript Library" },
-                { icon: <SiNextdotjs className="w-7 h-7" />, name: "Next.Js" },
-                { icon: <SiTailwindcss className="w-7 h-7" style={{ color: "#06b6d4" }} />, name: "Tailwind CSS" },
-                { icon: <FaJava className="w-7 h-7" style={{ color: "#f44336" }} />, name: "Java" },
-                { icon: <SiSpring className="w-7 h-7" style={{ color: "#6db33f" }} />, name: "Spring" },
-                { icon: <SiPython className="w-7 h-7" style={{ color: "#ffcf3f" }} />, name: "Python" },
-                { icon: <SiPostgresql className="w-7 h-7" style={{ color: "#336791" }} />, name: "PostgreSQL" },
-                { icon: <FaGitAlt className="w-7 h-7" style={{ color: "#f4511e" }} />, name: "Git" },
-                { icon: <SiSupabase className="w-7 h-7" style={{ color: "#3ecf8e" }} />, name: "Supabase" },
+                { icon: <SiTypescript className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "TypeScript" },
+                { icon: <SiReact className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "React" },
+                { icon: <SiNextdotjs className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Next.js" },
+                { icon: <SiTailwindcss className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Tailwind" },
+                { icon: <FaJava className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Java" },
+                { icon: <SiSpring className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Spring" },
+                { icon: <SiPython className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Python" },
+                { icon: <SiPostgresql className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "PostgreSQL" },
+                { icon: <FaGitAlt className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Git" },
+                { icon: <SiSupabase className="w-5 h-5" style={{ color: "#e8694a" }} />, name: "Supabase" },
               ].map((tech, index) => (
                 <div
                   key={index}
-                  className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center rounded-md bg-white/10 text-white flex-shrink-0">{tech.icon}</div>
-                  <div className="flex items-center">
-                    <h3 className="text-white font-semibold text-sm mb-0">{tech.name}</h3>
-                  </div>
+                  {tech.icon}
+                  <span className="text-sm text-[var(--foreground)]">{tech.name}</span>
                 </div>
               ))}
             </div>
@@ -414,27 +392,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Experiência Section */}
+      {/* ── EXPERIÊNCIA ── */}
       <section ref={sections.experiencia} id="experiencia" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 inline-block ml-2">Experiência</h2>
+            <h2 className="text-2xl font-semibold mb-2 text-[var(--foreground)]">Experiência</h2>
+            <p className="text-base text-[var(--foreground-muted)] mb-8">Onde trabalhei até agora.</p>
 
-            <div>
+            <div className="flex flex-col gap-3">
               {experiences.map((exp, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.2 }}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.12 }}
                   viewport={{ once: true }}
-                  className="relative pl-8 border-l border-white/30 py-8 sm:py-12"
+                  className="flex flex-col gap-3 rounded-xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-[var(--primary)]/25 px-5 py-4 transition-all duration-300"
                 >
-                  <div className="absolute w-3 h-3 bg-[var(--primary)] rounded-full -left-[6.5px] top-14" />
-                  <h3 className="text-lg sm:text-xl font-medium">{exp.title}</h3>
-                  <p className="text-[var(--primary)] mb-2">{exp.company}</p>
-                  <p className="text-sm text-gray-400 mb-3">{exp.period}</p>
-                  <p className="text-gray-300">{exp.description}</p>
+                  <p className="text-xs text-[var(--foreground-muted)] tabular-nums">{exp.period}</p>
+                  <div>
+                    <h3 className="text-sm font-semibold text-[var(--foreground)] mb-1">{exp.title}</h3>
+                    <p className="text-xs text-[var(--primary)] mb-2 font-medium">{exp.company}</p>
+                    <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">{exp.description}</p>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -442,47 +422,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Projetos Section */}
+      {/* ── PROJETOS ── */}
       <section ref={sections.projetos} id="projetos" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 inline-block ml-2">Projetos</h2>
+            <h2 className="text-2xl font-semibold mb-2 text-[var(--foreground)]">Projetos</h2>
+            <p className="text-base text-[var(--foreground-muted)] mb-8">Alguns dos projetos que desenvolvi.</p>
 
-            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="flex flex-col gap-3">
               {projects.map((project, index) => (
                 <motion.div
                   key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className={`group cursor-pointer relative overflow-hidden rounded-xl border border-white/10 transition-all hover:border-white/20 bg-white/5 backdrop-blur-sm hover:scale-[1.02] duration-300 ${
-                    project.featured ? "sm:col-span-2" : ""
-                  }`}
-                  onClick={() => setSelectedProject(project)}
-                  onMouseEnter={() => setCursorVariant("hover")}
-                  onMouseLeave={() => setCursorVariant("default")}
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 rounded-xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-[var(--primary)]/25 px-5 py-4 transition-all duration-300"
                 >
-                  <div className="p-4 sm:p-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg sm:text-xl font-medium mb-2 group-hover:text-white transition-colors">{project.title}</h3>
-                        <p className="text-gray-400 text-sm mb-4">{project.description}</p>
-                      </div>
-
-                      <div className="text-white/40 group-hover:text-white/80 transition-colors">
-                        <HiOutlineArrowNarrowRight className="w-5 h-5" />
-                      </div>
+                  {/* Thumbnail */}
+                  {project.image && (
+                    <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-black/30">
+                      <Image src={project.image} alt={project.title} width={80} height={80} className="object-cover w-full h-full" />
                     </div>
+                  )}
 
-                    <div className="flex flex-wrap gap-2">
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold text-[var(--foreground)] mb-1">{project.title}</h3>
+                    <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-3 line-clamp-2">{project.description}</p>
+                    <div className="flex flex-wrap gap-1.5">
                       {project.techs.map((tech) => (
-                        <span key={tech} className="text-xs py-1 px-2 rounded-full bg-white/5 text-gray-300">
+                        <span key={tech} className="text-xs py-0.5 px-2.5 rounded-full border border-white/[0.08] text-[var(--foreground-muted)]">
                           {tech}
                         </span>
                       ))}
                     </div>
                   </div>
+
+                  {/* Icon buttons */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Ver código no GitHub"
+                      className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/[0.08] text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:border-white/20 transition-all"
+                      onMouseEnter={() => setCursorVariant("hover")}
+                      onMouseLeave={() => setCursorVariant("default")}
+                    >
+                      <FaGithub className="w-3.5 h-3.5" />
+                    </a>
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visitar site"
+                      className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/[0.08] text-[var(--foreground-muted)] hover:text-[var(--primary)] hover:border-[var(--primary)]/40 transition-all"
+                      onMouseEnter={() => setCursorVariant("hover")}
+                      onMouseLeave={() => setCursorVariant("default")}
+                    >
+                      <HiExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -490,118 +491,57 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contato Section */}
-      <section ref={sections.contato} id="contato" className="py-20 px-4 sm:px-6 bg-transparent">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* ── CONTATO ── */}
+      <section ref={sections.contato} id="contato" className="py-20 px-6 sm:px-8">
+        <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">Interessado em trabalhar juntos?</h2>
+            <h2 className="text-2xl font-semibold mb-2 text-[var(--foreground)]">Contato</h2>
+            <p className="text-base text-[var(--foreground-muted)] mb-8">Interessado em trabalhar juntos? Me manda uma mensagem.</p>
 
             <a
               href="mailto:gabrielassisvieira03@gmail.com"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gray-200 text-black font-medium hover:bg-white transition-colors duration-300 mb-10"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--foreground)] text-[var(--background)] text-sm font-medium hover:opacity-90 transition-opacity mb-10"
               onMouseEnter={() => setCursorVariant("hover")}
               onMouseLeave={() => setCursorVariant("default")}
             >
-              <FaEnvelope className="text-black" /> Entre em Contato
+              <FaEnvelope /> Entre em Contato
             </a>
 
-            <div className="flex justify-center gap-6">
+            <div className="flex gap-5">
               <a
                 href="https://github.com/GabrielKrishna"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-2xl text-gray-400 hover:text-white transition-colors"
+                className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+                aria-label="GitHub"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
-                aria-label="GitHub"
               >
-                <FaGithub />
+                <FaGithub className="w-5 h-5" />
               </a>
               <a
                 href="https://linkedin.com/in/GabrielKrishna"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-2xl text-gray-400 hover:text-white transition-colors"
+                className="text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+                aria-label="LinkedIn"
                 onMouseEnter={() => setCursorVariant("hover")}
                 onMouseLeave={() => setCursorVariant("default")}
-                aria-label="LinkedIn"
               >
-                <FaLinkedin />
+                <FaLinkedin className="w-5 h-5" />
               </a>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 sm:py-10 px-4 sm:px-6 text-center text-sm text-gray-500 bg-black/20">
-        <p>© {new Date().getFullYear()} Gabriel Krishna. Todos os direitos reservados.</p>
-        <p className="mt-2">Desenvolvido com Next.js, Tailwind e Framer Motion</p>
+      {/* ── FOOTER ── */}
+      <footer className="py-8 px-6 text-center text-xs text-[var(--foreground-muted)]">
+        <div className="max-w-3xl mx-auto border-t border-white/[0.06] pt-8">
+          <p>© {new Date().getFullYear()} Gabriel Krishna. Todos os direitos reservados.</p>
+          <p className="mt-1.5">Desenvolvido com Next.js, Tailwind e Framer Motion</p>
+        </div>
       </footer>
-
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-            onClick={() => setSelectedProject(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-neutral-900 border border-white/10 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-auto p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-2xl font-bold">{selectedProject.title}</h3>
-                <button onClick={() => setSelectedProject(null)} className="p-1 rounded-full hover:bg-white/10 transition-colors">
-                  <HiX className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="aspect-video w-full bg-black/50 rounded-lg mb-6 flex items-center justify-center overflow-hidden">
-                <Image src="/projects/InforMais.jpeg" alt="Screenshot do projeto" width={1280} height={720} className="object-cover w-full h-full" />
-              </div>
-
-              <p className="mb-6 text-gray-300">{selectedProject.description}</p>
-
-              <div className="mb-6">
-                <h4 className="text-sm uppercase text-gray-400 mb-2">Tecnologias</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.techs.map((tech) => (
-                    <span key={tech} className="text-xs py-1 px-3 rounded-full bg-white/5 text-gray-300">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <a
-                  href={selectedProject.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-white/5 hover:bg-white/10 transition-colors"
-                >
-                  <FaGithub /> <span>Ver código</span>
-                </a>
-                <a
-                  href={selectedProject.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200 text-black hover:bg-white transition-colors"
-                >
-                  <HiOutlineArrowNarrowRight /> <span>Visitar site</span>
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </main>
   );
 }
