@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaEnvelope, FaFile, FaGithub, FaLinkedin, FaJava, FaGitAlt } from "react-icons/fa";
 import { SiTypescript, SiTailwindcss, SiReact, SiNextdotjs, SiSpring, SiPython, SiPostgresql, SiSupabase } from "react-icons/si";
-import { HiMenu, HiExternalLink, HiX } from "react-icons/hi";
-import { MdHome, MdWork, MdFolder, MdBuild, MdEdit } from "react-icons/md";
+import { HiExternalLink } from "react-icons/hi";
+import { MdHome, MdWork, MdFolder, MdBuild, MdEdit, MdSchool } from "react-icons/md";
 import Image from "next/image";
 
 type Project = {
@@ -26,17 +26,24 @@ type Experience = {
   description: string;
 };
 
+type Education = {
+  degree: string;
+  institution: string;
+  period: string;
+  status: string;
+};
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [cursorVariant, setCursorVariant] = useState("default");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const sections = {
     home: useRef<HTMLDivElement>(null),
     tecnologias: useRef<HTMLDivElement>(null),
     experiencia: useRef<HTMLDivElement>(null),
     projetos: useRef<HTMLDivElement>(null),
+    formacao: useRef<HTMLDivElement>(null),
     contato: useRef<HTMLDivElement>(null),
   };
 
@@ -60,6 +67,21 @@ export default function Home() {
       period: "set 2023 - fev 2024",
       description:
         "Desenvolvimento de uma aplicação desktop voltada para a transformação de dados vindos de banco de dados, encaminhados para um processamento com inteligência artificial.",
+    },
+  ];
+
+  const education: Education[] = [
+    {
+      degree: "Mestrado em Ciência da Computação",
+      institution: "Universidade Federal de Jataí — UFJ",
+      period: "2026 - presente",
+      status: "Em andamento",
+    },
+    {
+      degree: "Bacharelado em Ciência da Computação",
+      institution: "Universidade Federal de Jataí — UFJ",
+      period: "2021 - 2025",
+      status: "Concluído",
     },
   ];
 
@@ -152,14 +174,13 @@ export default function Home() {
     },
   };
 
-  const [scrollTarget, setScrollTarget] = useState<string | null>(null);
-
   // Mapeamento de seções para ícones
   const navItems = [
     { key: "home", icon: <MdHome className="w-5 h-5" />, label: "Início" },
     { key: "tecnologias", icon: <MdBuild className="w-5 h-5" />, label: "Tecnologias" },
     { key: "experiencia", icon: <MdWork className="w-5 h-5" />, label: "Experiência" },
     { key: "projetos", icon: <MdFolder className="w-5 h-5" />, label: "Projetos" },
+    { key: "formacao", icon: <MdSchool className="w-5 h-5" />, label: "Formação" },
     { key: "contato", icon: <MdEdit className="w-5 h-5" />, label: "Contato" },
   ];
 
@@ -212,50 +233,21 @@ export default function Home() {
           ))}
         </nav>
 
-        {/* Mobile: botão hamburguer à direita */}
-        <div className="pointer-events-auto md:hidden absolute right-4 top-0">
-          <button
-            className="p-2.5 rounded-xl bg-[#2a2a2a] border border-white/[0.08]"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <HiX className="w-5 h-5" /> : <HiMenu className="w-5 h-5" />}
-          </button>
-        </div>
+        {/* Mobile dock — same as desktop */}
+        <nav className="pointer-events-auto flex md:hidden items-center gap-1 px-3 py-2 rounded-2xl bg-[#2a2a2a] border border-white/[0.08]">
+          {navItems.map(({ key, icon }) => (
+            <button
+              key={key}
+              onClick={() => scrollTo(key)}
+              className={`relative flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 cursor-pointer
+                ${activeSection === key ? "text-[var(--primary)] bg-white/[0.07]" : "text-[var(--foreground-muted)]"}`}
+            >
+              {icon}
+              {activeSection === key && <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />}
+            </button>
+          ))}
+        </nav>
       </header>
-
-      {/* Mobile menu dropdown */}
-      <AnimatePresence
-        onExitComplete={() => {
-          if (scrollTarget) {
-            scrollTo(scrollTarget);
-            setScrollTarget(null);
-          }
-        }}
-      >
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="fixed top-16 right-4 z-40 bg-[#2a2a2a] border border-white/[0.08] rounded-xl overflow-hidden"
-          >
-            {navItems.map(({ key, icon, label }) => (
-              <button
-                key={key}
-                className={`flex items-center gap-3 w-full px-5 py-3 text-sm transition-colors
-                  ${activeSection === key ? "text-[var(--primary)]" : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"}`}
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setScrollTarget(key);
-                }}
-              >
-                {icon} {label}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ── HERO ── */}
       <section ref={sections.home} id="home" className="min-h-screen flex items-center pt-24 pb-20 px-6 sm:px-8 md:px-10 lg:px-12">
@@ -439,9 +431,9 @@ export default function Home() {
                   viewport={{ once: true }}
                   className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 rounded-xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-[var(--primary)]/25 px-5 py-4 transition-all duration-300"
                 >
-                  {/* Thumbnail */}
+                  {/* Thumbnail — hidden on mobile */}
                   {project.image && (
-                    <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-black/30">
+                    <div className="hidden sm:block w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-black/30">
                       <Image src={project.image} alt={project.title} width={80} height={80} className="object-cover w-full h-full" />
                     </div>
                   )}
@@ -483,6 +475,42 @@ export default function Home() {
                     >
                       <HiExternalLink className="w-3.5 h-3.5" />
                     </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── FORMAÇÃO ── */}
+      <section ref={sections.formacao} id="formacao" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
+        <div className="max-w-3xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
+            <h2 className="text-2xl font-semibold mb-2 text-[var(--foreground)]">Formação</h2>
+            <p className="text-base text-[var(--foreground-muted)] mb-8">Minha trajetória acadêmica.</p>
+
+            <div className="flex flex-col gap-3">
+              {education.map((edu, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.12 }}
+                  viewport={{ once: true }}
+                  className="flex flex-col gap-3 rounded-xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-[var(--primary)]/25 px-5 py-4 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs text-[var(--foreground-muted)] tabular-nums">{edu.period}</p>
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full border ${edu.status === "Em andamento" ? "border-[var(--primary)]/40 text-[var(--primary)]" : "border-white/[0.1] text-[var(--foreground-muted)]"}`}
+                    >
+                      {edu.status}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-[var(--foreground)] mb-1">{edu.degree}</h3>
+                    <p className="text-xs text-[var(--primary)] font-medium">{edu.institution}</p>
                   </div>
                 </motion.div>
               ))}
