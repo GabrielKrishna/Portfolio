@@ -92,8 +92,8 @@ export default function Home() {
       description: "Loja virtual com foco em performance. Implementação de carrinho persistente e checkout otimizado.",
       techs: ["Next.js", "Zustand", "Tailwind CSS"],
       github: "https://github.com/gabrielkrishna",
-      link: "https://gabrielkrishna.vercel.app",
-      image: "/projects/InforMais.jpeg",
+      link: "https://www.informaisfibra.com.br/",
+      image: "/projects/informaisfibra.png",
       featured: true,
     },
   ];
@@ -434,7 +434,7 @@ export default function Home() {
                   {/* Thumbnail — hidden on mobile */}
                   {project.image && (
                     <div className="hidden sm:block w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-black/30">
-                      <Image src={project.image} alt={project.title} width={80} height={80} className="object-cover w-full h-full" />
+                      <Image src={project.image} alt={project.title} width={80} height={80} className="object-contain w-full h-full" />
                     </div>
                   )}
 
