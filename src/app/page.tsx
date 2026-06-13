@@ -8,6 +8,7 @@ import { HiExternalLink } from "react-icons/hi";
 import { MdHome, MdWork, MdFolder, MdBuild, MdEdit, MdSchool } from "react-icons/md";
 import Image from "next/image";
 
+// Types
 type Project = {
   id: string;
   title: string;
@@ -34,6 +35,7 @@ type Education = {
 };
 
 export default function Home() {
+  // State
   const [activeSection, setActiveSection] = useState("home");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [cursorVariant, setCursorVariant] = useState("default");
@@ -47,6 +49,7 @@ export default function Home() {
     contato: useRef<HTMLDivElement>(null),
   };
 
+  // Data
   const experiences: Experience[] = [
     {
       title: "Data Engineer",
@@ -98,6 +101,8 @@ export default function Home() {
     },
   ];
 
+  // Effects
+  // Cursor tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -106,8 +111,8 @@ export default function Home() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  // Active section observer
   useEffect(() => {
-    // Tracks how much of each section is visible to find the "most visible" one
     const visibilityMap = new Map<string, number>();
 
     const observer = new IntersectionObserver(
@@ -116,7 +121,6 @@ export default function Home() {
           visibilityMap.set(entry.target.id, entry.intersectionRatio);
         });
 
-        // Pick the section with the highest intersection ratio
         let maxRatio = 0;
         let mostVisible = "";
         visibilityMap.forEach((ratio, id) => {
@@ -129,7 +133,6 @@ export default function Home() {
         if (mostVisible) setActiveSection(mostVisible);
       },
       {
-        // Multiple thresholds for finer granularity
         threshold: Array.from({ length: 21 }, (_, i) => i * 0.05),
         rootMargin: "-60px 0px 0px 0px",
       },
@@ -140,15 +143,16 @@ export default function Home() {
     });
 
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Scroll restoration
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
   }, []);
 
+  // Animation variants
   const cursorVariants = {
     default: {
       x: mousePosition.x - 16,
@@ -174,7 +178,7 @@ export default function Home() {
     },
   };
 
-  // Mapeamento de seções para ícones
+  // Nav items
   const navItems = [
     { key: "home", icon: <MdHome className="w-5 h-5" />, label: "Início" },
     { key: "tecnologias", icon: <MdBuild className="w-5 h-5" />, label: "Tecnologias" },
@@ -192,10 +196,9 @@ export default function Home() {
 
   return (
     <main className="font-sans relative min-h-screen antialiased text-[var(--foreground)]">
-      {/* Custom cursor */}
+      {/* Cursor */}
       <motion.div
         className="fixed top-0 left-0 rounded-full pointer-events-none z-[60] border border-[var(--primary)]/30 hidden md:block"
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         variants={cursorVariants as any}
         animate={cursorVariant}
         transition={{ type: "spring", stiffness: 500, damping: 28 }}
@@ -204,9 +207,9 @@ export default function Home() {
       {/* Background */}
       <div className="fixed inset-0 bg-[var(--background)] z-[-1]" />
 
-      {/* ── HEADER: dock centralizado ── */}
+      {/* Navbar */}
       <header className="fixed top-5 left-0 right-0 z-50 flex justify-center pointer-events-none">
-        {/* Desktop dock */}
+        {/* Desktop */}
         <nav className="pointer-events-auto hidden md:flex items-center gap-1 px-4 py-2.5 rounded-2xl bg-[#2a2a2a] border border-white/[0.08]">
           {navItems.map(({ key, icon, label }) => (
             <button
@@ -223,17 +226,14 @@ export default function Home() {
             >
               {icon}
 
-              {/* Label tooltip */}
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-[#2a2a2a] border border-white/[0.08] text-[10px] text-[var(--foreground-muted)] whitespace-nowrap opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 pointer-events-none">
                 {label}
               </span>
-
-              {activeSection === key && <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />}
             </button>
           ))}
         </nav>
 
-        {/* Mobile dock — same as desktop */}
+        {/* Mobile */}
         <nav className="pointer-events-auto flex md:hidden items-center gap-1 px-3 py-2 rounded-2xl bg-[#2a2a2a] border border-white/[0.08]">
           {navItems.map(({ key, icon }) => (
             <button
@@ -243,13 +243,12 @@ export default function Home() {
                 ${activeSection === key ? "text-[var(--primary)] bg-white/[0.07]" : "text-[var(--foreground-muted)]"}`}
             >
               {icon}
-              {activeSection === key && <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />}
             </button>
           ))}
         </nav>
       </header>
 
-      {/* ── HERO ── */}
+      {/* Home */}
       <section ref={sections.home} id="home" className="min-h-screen flex items-center pt-24 pb-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <motion.div
           initial="hidden"
@@ -257,7 +256,6 @@ export default function Home() {
           variants={fadeInUp}
           className="max-w-3xl mx-auto w-full flex flex-col md:flex-row md:items-center gap-10"
         >
-          {/* Texto */}
           <div className="flex-1">
             <p className="text-[var(--foreground-muted)] text-sm mb-4 tracking-wide">Engenheiro de Dados & Desenvolvedor Full-Stack</p>
 
@@ -268,7 +266,8 @@ export default function Home() {
             </h1>
 
             <p className="text-[var(--foreground-muted)] text-base sm:text-lg max-w-xl mb-8 leading-relaxed">
-              2 anos de experiência transformando dados em soluções — pipelines, dashboards e automações com Python e SQL no dia a dia. Nos projetos paralelos, React, Next.js, TypeScript e Java.
+              2 anos de experiência transformando dados em soluções — pipelines, dashboards e automações com Python e SQL no dia a dia. Nos projetos
+              paralelos, React, Next.js, TypeScript e Java.
             </p>
 
             <p className="text-[var(--foreground-muted)] text-base sm:text-lg max-w-xl mb-8 leading-relaxed">📍 Brasil</p>
@@ -293,9 +292,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Foto + links sociais */}
           <div className="flex flex-col items-center gap-4 shrink-0 self-center md:self-auto p-4 rounded-2xl border border-[var(--primary)]/20">
-            {/* Foto */}
             <div className="relative w-52 h-52 sm:w-60 sm:h-60">
               <div className="absolute inset-0 rounded-xl overflow-hidden border border-white/[0.1]">
                 <Image src="/profile/profile.jpg" alt="Gabriel Krishna" fill className="object-cover" />
@@ -303,7 +300,6 @@ export default function Home() {
               <div className="absolute inset-0 rounded-xl border border-white/[0.08] translate-x-3 translate-y-3 -z-10" />
             </div>
 
-            {/* Links sociais — abaixo da foto */}
             <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#2a2a2a] border border-white/[0.08]">
               <a
                 href="/resume.pdf"
@@ -351,7 +347,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* ── TECNOLOGIAS ── */}
+      {/* Technologies */}
       <section ref={sections.tecnologias} id="tecnologias" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
@@ -384,7 +380,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── EXPERIÊNCIA ── */}
+      {/* Experience */}
       <section ref={sections.experiencia} id="experiencia" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
@@ -414,7 +410,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── PROJETOS ── */}
+      {/* Projects */}
       <section ref={sections.projetos} id="projetos" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
@@ -431,14 +427,12 @@ export default function Home() {
                   viewport={{ once: true }}
                   className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 rounded-xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-[var(--primary)]/25 px-5 py-4 transition-all duration-300"
                 >
-                  {/* Thumbnail — hidden on mobile */}
                   {project.image && (
                     <div className="hidden sm:block w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-black/30">
                       <Image src={project.image} alt={project.title} width={80} height={80} className="object-contain w-full h-full" />
                     </div>
                   )}
 
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-semibold text-[var(--foreground)] mb-1">{project.title}</h3>
                     <p className="text-sm text-[var(--foreground-muted)] leading-relaxed mb-3 line-clamp-2">{project.description}</p>
@@ -451,7 +445,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Icon buttons */}
                   <div className="flex items-center gap-2 shrink-0">
                     <a
                       href={project.github}
@@ -483,7 +476,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FORMAÇÃO ── */}
+      {/* Education */}
       <section ref={sections.formacao} id="formacao" className="py-16 sm:py-20 px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
@@ -519,7 +512,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CONTATO ── */}
+      {/* Contact */}
       <section ref={sections.contato} id="contato" className="py-20 px-6 sm:px-8">
         <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}>
@@ -563,7 +556,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* Footer */}
       <footer className="py-8 px-6 text-center text-xs text-[var(--foreground-muted)]">
         <div className="max-w-3xl mx-auto border-t border-white/[0.06] pt-8">
           <p>© {new Date().getFullYear()} Gabriel Krishna. Todos os direitos reservados.</p>
